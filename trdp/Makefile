@@ -206,6 +206,8 @@ vlan:		outdir $(OUTDIR)/trdp-md-test-vlan $(OUTDIR)/trdp-pd-test-vlan
 
 marshall:	$(OUTDIR)/test_marshalling
 
+library:    outdir $(OUTDIR)/libtrdp.so $(OUTDIR)/libtrdpap.so
+
 %_config:
 	cp -f config/$@ config/config.mk
 
@@ -222,7 +224,15 @@ $(OUTDIR)/libtrdpap.a:		$(addprefix $(OUTDIR)/,$(notdir $(TRDP_OBJS))) $(addpref
 			@$(RM) $@
 			$(AR) cq $@ $^
 
+$(OUTDIR)/libtrdp.so:		$(addprefix $(OUTDIR)/,$(notdir $(TRDP_OBJS)))
+			@$(ECHO) ' ### Building the lib $(@F)'
+			@$(RM) $@
+			$(CC) $^ -shared -o $(OUTDIR)/libtrdp.so
 
+$(OUTDIR)/libtrdpap.so:		$(addprefix $(OUTDIR)/,$(notdir $(TRDP_OBJS))) $(addprefix $(OUTDIR)/,$(notdir $(TRDP_OPT_OBJS)))
+			@$(ECHO) ' ### Building the lib $(@F)'
+			@$(RM) $@
+			$(CC) $^ -shared -o $(OUTDIR)/libtrdpap.so
 ###############################################################################
 #
 # rules for the demos
